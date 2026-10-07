@@ -34,7 +34,7 @@
       renderTracks() +
       renderDetails() +
     '</main>' +
-    '<footer class="cm-footer">&copy; 2026 <a href="https://craz.com">Crabtree Labz</a></footer>';
+    '<footer class="cm-footer">&copy; 2026 <a href="https://craz.com">Crabtree Labz</a> · <a href="https://craz.com/privacy.html">Privacy</a></footer>';
 
   wireVideo();
   wireTracks();
@@ -42,8 +42,7 @@
   // ── Video ─────────────────────────────────────────────
   function renderVideo() {
     var inner = P.youtubeId
-      ? '<iframe src="https://www.youtube-nocookie.com/embed/' + encodeURIComponent(P.youtubeId) +
-        '?rel=0&modestbranding=1" title="' + esc(P.title) + '" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>'
+      ? ytFacade(P.youtubeId, P.title)
       : '<div class="cm-video-stub"><span>Video coming soon</span></div>';
     return '<section class="cm-video">' +
       '<div class="cm-frame" id="cm-frame">' + inner + '</div>' +
@@ -57,6 +56,8 @@
     if (!btn || !frame) return;
     if (!frame.requestFullscreen && !frame.webkitRequestFullscreen) { btn.hidden = true; return; }
     btn.addEventListener('click', function () {
+      var facade = frame.querySelector('.yt-facade');
+      if (facade) facade.click();          // TV mode starts the video too
       (frame.requestFullscreen || frame.webkitRequestFullscreen).call(frame);
     });
   }
@@ -193,6 +194,29 @@
     if (P.license) rows.push('<div><dt>Downloads</dt><dd>' + esc(P.license) + '</dd></div>');
     return rows.length ? '<dl class="cm-details">' + rows.join('') + '</dl>' : '';
   }
+
+  /* ── Click-to-load YouTube ────────────────────────────
+     Nothing loads from YouTube until the visitor presses play
+     (our privacy policy promises no third-party requests on page load).
+     ytFacade(id, title) returns the button; one click handler swaps in
+     YouTube's privacy-enhanced player. */
+  function ytFacade(id, title) {
+    return '<button type="button" class="yt-facade" data-youtube="' + esc(id) + '" data-title="' + esc(title || '') + '"' +
+      ' aria-label="Play video' + (title ? ': ' + esc(title) : '') + '">' +
+      '<span class="yt-play" aria-hidden="true">▶</span>' +
+      '<span class="yt-note">Play video · loads from YouTube</span></button>';
+  }
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest ? e.target.closest('.yt-facade') : null;
+    if (!b) return;
+    var f = document.createElement('iframe');
+    f.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(b.getAttribute('data-youtube')) + '?autoplay=1&rel=0';
+    f.title = b.getAttribute('data-title') || 'Video';
+    f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+    f.allowFullscreen = true;
+    f.className = 'yt-frame';
+    b.parentNode.replaceChild(f, b);
+  });
 
   // ── Helpers ───────────────────────────────────────────
   function esc(s) {
