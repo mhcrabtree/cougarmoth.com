@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Template demo: not linked from the site, and kept out of search results. -->
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Demo Playlist · CougarMoth</title>
+  <link href="https://fonts.googleapis.com/css2?family=Almendra+Display&family=Nunito:wght@300;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../playlists.css" />
+</head>
+<body>
+<div id="cm-root"></div>
+
+<!--
+  PLAYLIST TEMPLATE
+  To add a playlist: copy this folder, rename it (e.g. playlists/low-water),
+  fill in the PLAYLIST object below, and put the MP3s in ./audio.
+  youtubeId: the ID from the YouTube URL (youtube.com/watch?v=THIS_PART).
+  Leave a track's length blank to read it from the file.
+-->
+<script>
+var PLAYLIST = {
+  title: "Demo Playlist",
+  theme: "A template, with three short tones standing in for songs",
+  released: "October 2026",
+  youtubeId: "",
+  story: [
+    "This is where the story goes: one or two short paragraphs about where the playlist came from. Where you were, what was happening, and why these songs belong together.",
+    "Keep it personal and brief. The music and the video do the rest."
+  ],
+  tracks: [
+    { title: "Demo Tone One", length: "", file: "audio/cougarmoth-demo-01-demo-tone-one.mp3" },
+    { title: "Demo Tone Two", length: "", file: "audio/cougarmoth-demo-02-demo-tone-two.mp3" },
+    { title: "Demo Tone Three", length: "", file: "audio/cougarmoth-demo-03-demo-tone-three.mp3" }
+  ],
+  license: "Free for personal listening. All other rights reserved."
+};
+</script>
+<script src="../playlists.js"></script>
+</body>
+</html>
